@@ -17,15 +17,19 @@ const reading = readline.createInterface({
   output: process.stdout
 });
 
-reading.question('Enter your text: ', (answer) => {
-  if (answer === 'exit') {
-    closeScript();
-  } 
-  fs.appendFile(textFilePath, answer, function (err) {
-    if (err) throw err;
+const askQuestion = () => {
+  reading.question('Enter your text: ', (answer) => {
+    if (answer === 'exit') {
+      closeScript();
+    } 
+    fs.appendFile(textFilePath, answer + '\n', function (err) {
+      if (err) throw err;
+    });
+    askQuestion();
   });
-  reading.close();
-});
+};
+
+askQuestion();
 
 reading.on('SIGINT', () => {
   closeScript();
